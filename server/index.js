@@ -3,7 +3,7 @@ const app = express()
 const sequelize = require('./db')
 const port = 5000
 const Register = require('./models/register')
-
+const Registerroutes = require("./routes/register")
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
@@ -11,6 +11,7 @@ app.post('/register', (req, res) => {
     const { username, password } = req.body;
 
 })
+app.use("/account", Registerroutes)
 
 sequelize
     .sync()

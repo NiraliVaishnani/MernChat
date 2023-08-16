@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import "../../style/Register.css"
+import axios from 'axios'
 const Login = () => {
     const [username, setusername] = useState('');
     const [password, setpassword] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(username, password)
+        const response = await axios.get(`http://localhost:5000/account/login`)
+        const data = response.data;
+        console.log("Login succesfull")
     }
     return (
         <div className="register-container">
