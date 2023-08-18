@@ -45,3 +45,15 @@ h1 {
 .register-button:hover {
     background-color: #0056b3;
 }
+
+.error-message {
+    color: red
+}
+
+.register-button:disabled {
+    /* Styles for the disabled button */
+    background-color: #ccc;
+    /* Change this color to your preferred disabled color */
+    cursor: not-allowed;
+    /* Change cursor to indicate button is disabled */
+}

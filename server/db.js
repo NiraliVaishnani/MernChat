@@ -1,15 +1,15 @@
 const mysql = require('mysql')
 const { Sequelize } = require('sequelize')
-const connection = mysql.createConnection({
-    host: "40.114.69.227",
-    user: "dotnet_SumitM",
-    password: "LYqNqV4QKK8w",
-    database: "dotnet_SumitM",
-});
-connection.connect(function (err) {
-    if (err) throw err;
-    console.log("Connection Successfull.......");
-});
+// const connection = mysql.createConnection({
+//     host: "40.114.69.227",
+//     user: "dotnet_SumitM",
+//     password: "LYqNqV4QKK8w",
+//     database: "dotnet_SumitM",
+// });
+// connection.connect(function (err) {
+//     if (err) throw err;
+//     console.log("Connection Successfull.......");
+// });
 
 // const sequelize = new Sequelize(
 //     "dotnet_SumitM",

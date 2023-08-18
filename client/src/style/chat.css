@@ -1,0 +1,19 @@
+/* Chat.css */
+.chat-container {
+    display: flex;
+    height: 100vh;
+}
+
+.contact-list {
+    flex: 1;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+.chat-area {
+    flex: 3;
+    padding: 16px;
+    background-color: #fff;
+    overflow-y: auto;
+}

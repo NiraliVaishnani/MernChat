@@ -3,15 +3,13 @@ const app = express()
 const sequelize = require('./db')
 const port = 5000
 const Register = require('./models/register')
+const LoginAttempt = require('./models/LoginAttempt')
 const Registerroutes = require("./routes/register")
 const bodyParser = require('body-parser');
 const cors = require('cors');
-app.use(cors(
-    // {
-    //     origin: 'http://localhost:5000', // Replace with your frontend's origin
-    //     credentials: true, // Allow cookies and other credentials
-    // }
-));
+
+app.use(cors());
+
 
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
