@@ -35,8 +35,11 @@ exports.userregistration = async (req, res) => {
     if (!password.match(passwordRegex)) {
         return res.status(401).json({ message: 'Password must contain at least one uppercase letter and one digit' });
     }
-
     const users = await Register.create({ email: email, password: password });
+    const token = jwt.sign({ email }, "nirali");
+    res.cookie("logintoken", token)
+    console.log("Token", token)
+
     res.json(users);
 }
 
