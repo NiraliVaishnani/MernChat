@@ -16,13 +16,20 @@ const Login = () => {
       const response = await axios.post(`http://localhost:5000/account/login`, {
         email: email,
         password: password,
+
       });
       const data = response.data;
       console.log(data.token);
+      console.log(data.username);
+      console.log(data.userId);
       if (data.token) {
-        const userInfo = { token: data.token, email: data.email };
+        // const userInfo = { token: data.token, email: data.email };
+        // localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        const userInfo = {
+          token: data.token, email: data.email, userId: data.userId, username: data.username
+        }
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        localStorage.setItem("logintoken", data.token, "email", data.email);
+        //localStorage.setItem("logintoken", data.token, "email", data.email, "userId", data.userId, "username", data.username);
         console.log("Login succesfull");
         navigate("/chat");
       } else {

@@ -27,7 +27,7 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.userregistration = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/; // Requires at least one uppercase letter, one digit, and a minimum length of 6 characters
   if (!password.match(passwordRegex)) {
     return res.status(401).json({
@@ -35,7 +35,7 @@ exports.userregistration = async (req, res) => {
         "Password must contain at least one uppercase letter and one digit",
     });
   }
-  const users = await Register.create({ email: email, password: password });
+  const users = await Register.create({ email: email, password: password, username: username });
   const token = jwt.sign({ email }, "nirali");
   res.cookie("logintoken", token);
   console.log("Token", token);
@@ -46,6 +46,7 @@ exports.userregistration = async (req, res) => {
 exports.userlogin = async (req, res) => {
   const { email, password } = req.body;
   const useridentity = await Register.findOne({ where: { email: email } });
+
   const loginAttempt = await LoginAttempt.findOne({ where: { email: email } });
   if (!loginAttempt) {
     await LoginAttempt.create({ email: email, attempts: 0, lastAttempt: null });
@@ -58,7 +59,8 @@ exports.userlogin = async (req, res) => {
     console.log("Token", token);
     const decodedToken = jwt.verify(token, "nirali");
     console.log("Decoded Token:", decodedToken);
-    res.json({ message: "Successfully logged in", token: token, email: email });
+    console.log("Userid", useridentity.id);
+    res.json({ message: "Successfully logged in", token: token, email: email, username: useridentity.username, userId: useridentity.id });
     // console.log("ADKC", req.headers.cookie);
     // Send the token as a message to the WebSocket client
     // if (req.websocketConnection) {

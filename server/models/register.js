@@ -10,6 +10,7 @@ const Register = sequelize.define(
             autoIncrement: true,
         },
         email: Sequelize.STRING,
+        username: Sequelize.STRING,
         password: Sequelize.STRING,
     },
     {
