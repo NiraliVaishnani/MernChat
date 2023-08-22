@@ -3,10 +3,15 @@ import '../../style/chatcontact.css'
 import { BsFillChatLeftFill } from 'react-icons/bs';
 import Avatar from './Avatar';
 const ContactList = (props) => {
-    const { onlinePeople, setOnlinePeople, userId } = props;
+    const { onlinePeople, setOnlinePeople, userId, getData2 } = props;
     const [selectedUserId, setSelectedUserId] = useState(null);
     const selectContact = (userId) => {
         setSelectedUserId(userId)
+        const selectcontact = userId;
+        console.log(selectcontact);
+        getData2(selectcontact)
+        // console.log(userId);
+        // getData(selectedUserId)
         // if (selectedUserId) {
         //     background color should be blue
         // }

@@ -93,3 +93,34 @@
 
 
 }
+
+/* Add appropriate styles for the chatarea container */
+.chatarea-container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style the chatarea header */
+.chatarea-header {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+
+
+/* Style the send button */
+.message-box button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Hover effect for the send button */
+.message-box button:hover {
+    background-color: #0056b3;
+}

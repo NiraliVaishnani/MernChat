@@ -79,11 +79,35 @@ wss.on("connection", (connection, req) => {
     console.error("JWT verification error:", error);
     connection.close();
   }
-  [...wss.clients].forEach(client => {
+
+  connection.on('message', (message) => {
+
+    messageData = JSON.parse(message.toString());
+    console.log("MESSAGEDATA", messageData)
+    const { recipient, text } = messageData;
+    console.log("MESSAGEDATA23456", recipient, text)
+    if (recipient && text) {
+      [...wss.clients].filter(c => c.userId === recipient)
+        .forEach(c => c.send(JSON.stringify({ text })))
+    }
+  })
+
+
+
+  //Notify everyone abount online people
+  // [...wss.clients].forEach(client => {
+  //   client.send(JSON.stringify({
+  //     online: [...wss.clients].map(c => ({ userId: c.userId, username: c.username }))
+  //   }));
+  // })
+
+  Array.from(wss.clients).forEach(client => {
     client.send(JSON.stringify({
-      online: [...wss.clients].map(c => ({ userId: c.userId, username: c.username }))
+      online: Array.from(wss.clients).map(c => ({ userId: c.userId, username: c.username }))
     }));
   })
+
+
   // console.log(
   //   "Number of user logged in ",
   //   [...wss.clients].map((c) => c.userEmail)

@@ -1,0 +1,18 @@
+/* Style the message box */
+.message-box {
+    position: absolute;
+    bottom: 0;
+    width: 72%;
+
+    display: flex;
+    padding: 25px;
+    background-color: #f0f0f0;
+}
+
+.message-box input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
