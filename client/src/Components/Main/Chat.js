@@ -5,9 +5,13 @@ import Chatarea from "./Chatarea";
 const Chat = () => {
   const [ws, setws] = useState(null);
   const [onlinePeople, setOnlinePeople] = useState([]);
+
   const [userId, setUserId] = useState("");
   const [username, setUserName] = useState('')
   const [selectedContact, setSelectedContact] = useState(null);
+  const [messages, setMessages] = useState([]);
+
+
 
   useEffect(() => {
     var storedUserInfo = localStorage.getItem("userInfo");
@@ -49,10 +53,22 @@ const Chat = () => {
         console.log(onlinePeople)
       }
       else if ('text' in messageData) {
-        setMessage(prev => ([...prev, { isOur: false, text: messageData }]))
+        console.log()
+        const { id, sender, text } = messageData;
+        //setMessages(prev => ([...prev, { isOur: false, text: messageData }]))
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { id, sender, isOur: false, text: messageData }, // Assuming 'id', 'sender', and 'text' are present in messageData
+        ]);
+        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", messages)
       }
     }
-  }, []);
+  }, [messages]);
+
+  useEffect(() => {
+    // When messages change, you can do any relevant updates here
+    console.log("Updated Messages:", messages);
+  }, [messages]);
   console.log("Onlinepeople", onlinePeople);
 
   const getData = (data) => {
@@ -68,7 +84,7 @@ const Chat = () => {
         <ContactList onlinePeople={onlinePeople} setOnlinePeople={setOnlinePeople} userId={userId} getData2={getData} />
       </div>
       <div className="chat-area"  >
-        <Chatarea selectedContact={selectedContact} ws={ws} />
+        <Chatarea selectedContact={selectedContact} ws={ws} messages={messages} userId={userId} />
       </div>
     </div>
   );

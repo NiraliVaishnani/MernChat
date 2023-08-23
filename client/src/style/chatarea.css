@@ -16,3 +16,13 @@
     border-radius: 5px;
     margin-right: 10px;
 }
+
+/* Add this to your CSS */
+.sender-message {
+    background-color: red;
+
+}
+
+.reciever-message {
+    background-color: aquamarine;
+}

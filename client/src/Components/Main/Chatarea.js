@@ -124,9 +124,10 @@ import React, { useEffect, useState } from 'react';
 import { BsArrowRight } from 'react-icons/bs';
 import '../../style/chatcontact.css';
 import '../../style/chatarea.css';
+import uniqBy from 'lodash/uniqBy'; // Import uniqBy from lodash
 
 const Chatarea = (props) => {
-    const { selectedContact, ws } = props;
+    const { selectedContact, ws, messages, userId } = props;
     const [message, setMessage] = useState('');
     const [allmessages, setAllmessages] = useState([]);
     const [updatedAllMessages, setUpdatedAllmessages] = useState([]);
@@ -150,17 +151,47 @@ const Chatarea = (props) => {
         setAllmessages(prev => [...prev, { text5: newMessage, isOur: true }]);
         setUpdatedAllmessages(prev => [...prev, { text5: newMessage, isOur: true }]);
         console.log("newMessage", updatedAllMessages);
+
         setMessage('');
     };
+    const messageswithoutDupes = uniqBy(messages, 'id');
+    const { id, sender } = messageswithoutDupes
+    console.log("messageswithoutDupes", messageswithoutDupes);
 
     return (
         <>
             {selectedContact && (
                 <>
                     <div className="chatarea-header">
+                        {/* sender: {messageswithoutDupes.map((message2, index) => (
+                            <li key={index}>{message2.sender}</li>
+                        ))} */}
+
+                        sender2:<ul>
+                            {messageswithoutDupes.map((message2, index) => (
+                                <li
+                                    key={index}
+                                    className={message2.sender ? 'sender-message' : 'reciever-message'}
+                                //className='sender-message'
+                                >
+                                    Hyy: {sender}
+                                    Hello:  {message2.sender}
+                                </li>
+                            ))}
+                        </ul>
+
+                        recipient: {messageswithoutDupes.map((message2, index) => (
+                            <li key={index}>{message2.text.recipient}</li>
+                        ))}
                         {updatedAllMessages.map((message2, index) => (
                             <li key={index}>{message2.text5.text}</li>
                         ))}
+
+                        {messageswithoutDupes.map((message2, index) => (
+                            <li key={index}>{message2.text.text}</li>
+                        ))}
+
+
                     </div>
 
                     <div className="message-box">
