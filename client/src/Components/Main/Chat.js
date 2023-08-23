@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../style/chat.css";
 import ContactList from "./ContactList";
 import Chatarea from "./Chatarea";
-const Chat = ({ selectedUserId }) => {
+const Chat = () => {
   const [ws, setws] = useState(null);
   const [onlinePeople, setOnlinePeople] = useState([]);
   const [userId, setUserId] = useState("");
@@ -43,13 +43,13 @@ const Chat = ({ selectedUserId }) => {
     function handMessage(e) {
       console.log("ssafkhsafgsjfsfgjfgf")
       const messageData = JSON.parse(e.data);
-      console.log(messageData);
+      console.log({ e, messageData });
       if ('online' in messageData) {
         showOnlinePeople(messageData.online);
         console.log(onlinePeople)
       }
-      else {
-        console.log(messageData);
+      else if ('text' in messageData) {
+        setMessage(prev => ([...prev, { isOur: false, text: messageData }]))
       }
     }
   }, []);

@@ -4,6 +4,7 @@ const sequelize = require("./db");
 const port = 5000;
 const Register = require("./models/register");
 const LoginAttempt = require("./models/LoginAttempt");
+const Message = require("./models/Message");
 const Registerroutes = require("./routes/register");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -80,15 +81,31 @@ wss.on("connection", (connection, req) => {
     connection.close();
   }
 
-  connection.on('message', (message) => {
+  connection.on('message', async (message) => {
 
     messageData = JSON.parse(message.toString());
     console.log("MESSAGEDATA", messageData)
     const { recipient, text } = messageData;
     console.log("MESSAGEDATA23456", recipient, text)
     if (recipient && text) {
-      [...wss.clients].filter(c => c.userId === recipient)
-        .forEach(c => c.send(JSON.stringify({ text })))
+      const messageDoc = await Message.create({
+        senderId: connection.userId,
+        recipientId: recipient,
+        text,
+      })
+      console.log("MessageDoc", messageDoc)
+
+
+      // [...wss.clients].filter(c => c.userId === recipient)
+      //   .forEach(c => c.send(JSON.stringify({ text, sender: connection.userId })))
+
+
+      Array.from(wss.clients).filter(c => c.userId === recipient)
+        .forEach(c => c.send(JSON.stringify({ text, sender: connection.userId, id: messageDoc.id })))
+
+
+
+
     }
   })
 
