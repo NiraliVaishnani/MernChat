@@ -6,6 +6,7 @@ const Register = require("./models/register");
 const LoginAttempt = require("./models/LoginAttempt");
 const Message = require("./models/Message");
 const Registerroutes = require("./routes/register");
+const messageroutes = require("./routes/Message")
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -20,6 +21,7 @@ app.post("/register", (req, res) => {
   const { username, password } = req.body;
 });
 app.use("/account", Registerroutes);
+app.use("/", messageroutes);
 
 sequelize
   .sync()
