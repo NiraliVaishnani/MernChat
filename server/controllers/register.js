@@ -26,6 +26,21 @@ exports.getUsers = async (req, res) => {
   res.json(users);
 };
 
+exports.getOnlineUsers = async (req, res) => {
+  try {
+    const onlinePeople = await Register.findAll({
+      where: {
+        isOnline: true
+      },
+      attributes: ['id', 'username'] // Select the columns you want to include in the response
+    });
+    res.json(onlinePeople);
+  } catch (error) {
+    console.error("Error fetching online people:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 exports.userregistration = async (req, res) => {
   const { email, password, username } = req.body;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/; // Requires at least one uppercase letter, one digit, and a minimum length of 6 characters
@@ -54,6 +69,8 @@ exports.userlogin = async (req, res) => {
   // console.log(loginAttempt.attempts)
   if (password == useridentity.password) {
     console.log("Successfully login");
+    // Set the isOnline field to true for the user
+    await Register.update({ isOnline: true }, { where: { id: useridentity.id } });
     const token = jwt.sign({ email }, "nirali");
     res.cookie("logintoken", token);
     console.log("Token", token);

@@ -8,6 +8,7 @@ import Login from './Components/Auth/Login';
 import { UserContextProvider } from './Usercontext';
 import Chat from './Components/Main/Chat'
 import MainLayout from './layout/MainLayout/MainLayout';
+import Chatarea from './Components/Main/Chatarea';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           </Route>
           <Route path="/" element={<MainLayout />}>
             <Route path="chat" element={<Chat />}></Route>
+            <Route path="chat/:id" element={<Chat />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

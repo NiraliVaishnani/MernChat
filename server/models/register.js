@@ -12,6 +12,7 @@ const Register = sequelize.define(
         email: Sequelize.STRING,
         username: Sequelize.STRING,
         password: Sequelize.STRING,
+        isOnline: Sequelize.STRING,
     },
     {
         tableName: "Registration",

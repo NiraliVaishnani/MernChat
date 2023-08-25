@@ -41,43 +41,29 @@ wss.on("connection", (connection, req) => {
   // Retrieve the token from the WebSocket handshake headers
   const tokenWithPrefix = req.headers["sec-websocket-protocol"];
   console.log("Token with prefix", tokenWithPrefix);
-  // const token = tokenWithPrefix.replace("logintoken, ", ""); // Remove the prefix
-  // console.log("Received token:", token); // Log the extracted token
-  // Split the string by comma followed by a space
   const parts = tokenWithPrefix.split(', ');
 
-  // Find the index of the "logintoken" part
+
   const tokenIndex = parts.indexOf("logintoken") + 1;
   const usernameIndex = parts.indexOf("username") + 1;
   const userIdIndex = parts.indexOf("userId") + 1;
-  console.log("TTTTTTT", tokenIndex, usernameIndex, userIdIndex);
 
   // Extract the token
   const token = parts[tokenIndex];
   const username = parts[usernameIndex];
   const userId = parts[userIdIndex];
-  console.log("Uuuuuuuuuuuuuuuuuuuuuuuuuuuu", username, userId);
+
   console.log("etyuewtuwety", token); // Output: the actual token value
-  console.log("userId", userId);
-  console.log("username", username);
+
   try {
     const decoded = jwt.verify(token, "nirali");
     console.log("Decoded token:", decoded); // Log the decoded payload
     const userEmail = decoded.email;
-    // const userId = userId;
-    //const username = username;
-    //console.log("UserEmail", userEmail);
-    // console.log("UserId", userId);
-    //console.log("Username", username)
-    console.log("userId2", userId);
-    console.log("username2", username);
+
     // Associate the connection with the user's email
     connection.userEmail = userEmail;
     connection.userId = userId;
     connection.username = username;
-    // connection.userId = userId;
-
-    // Rest of the code for authenticated connection
   } catch (error) {
     console.error("JWT verification error:", error);
     connection.close();
@@ -102,9 +88,22 @@ wss.on("connection", (connection, req) => {
       //   .forEach(c => c.send(JSON.stringify({ text, sender: connection.userId })))
 
 
-      Array.from(wss.clients).filter(c => c.userId === recipient)
-        .forEach(c => c.send(JSON.stringify({ text, sender: connection.userId, id: messageDoc.id, recipient })))
+      // Array.from(wss.clients).filter(c => c.userId === recipient)
+      //   .forEach(c => c.send(JSON.stringify({ text, sender: connection.userId, id: messageDoc.id, recipient })))
 
+      Array.from(wss.clients)
+        .filter(c => c.userId === recipient)
+        .forEach(c => {
+          console.log("Sending message to recipient:", recipient);
+          console.log("Message content:", text);
+          console.log("Sender:", connection.userId);
+          console.log("Message ID:", messageDoc.id);
+          console.log("Recipient:", recipient);
+
+          c.send(JSON.stringify({ text, sender: connection.userId, id: messageDoc.id, recipient }));
+
+          console.log("Message sent to recipient:", recipient);
+        });
 
 
 
