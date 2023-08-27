@@ -18,8 +18,6 @@
 //         console.log(" all messages:", allmessages);
 //     }, [allmessages]);
 
-
-
 //     const handleSendMessage = async () => {
 //         ws.send(JSON.stringify({
 //             recipient: selectedContact,
@@ -35,7 +33,6 @@
 
 //         setMessage('');
 //     };
-
 
 //     const handleMessageChange = (event) => {
 //         setMessage(event.target.value);
@@ -107,128 +104,120 @@
 
 // export default Chatarea;
 
-
-import React, { useEffect, useState } from 'react';
-import { BsArrowRight } from 'react-icons/bs';
-import '../../style/chatcontact.css';
-import '../../style/chatarea.css';
-import uniqBy from 'lodash/uniqBy'; // Import uniqBy from lodash
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { BsArrowRight } from "react-icons/bs";
+import "../../style/chatcontact.css";
+import "../../style/chatarea.css";
+import uniqBy from "lodash/uniqBy"; // Import uniqBy from lodash
+import { useParams } from "react-router-dom";
 import axios from "axios"; // Import axios
 
 const Chatarea = (props) => {
-    const { id } = useParams();
-    console.log("Id3: ", id)
-    const { selectedContact, ws, messages, userId } = props;
-    const [message, setMessage] = useState('');
-    const [allmessages, setAllmessages] = useState([]);
-    const [updatedAllMessages, setUpdatedAllmessages] = useState([]);
+  const { id } = useParams();
+  console.log("Id3: ", id);
+  const { selectedContact, ws, messages, userId } = props;
+  const [message, setMessage] = useState("");
+  const [allmessages, setAllmessages] = useState([]);
 
+  const fetchAllMessages = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/allmessage/${id}`
+      );
+      const data = response.data; // Return the fetched data from the response
+      console.log("Data", data);
+      setAllmessages(data);
+      // setMessage(data)
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      return [];
+    }
+  };
 
-    // useEffect(() => {
-    //     console.log("Updated all messages:", updatedAllMessages);
-    // }, [updatedAllMessages]);
+  useEffect(() => {
+    fetchAllMessages();
+  }, []);
 
-    // useEffect(() => {
-    //     console.log(" all messages:", allmessages);
-    // }, [allmessages]);
+  const createMessage = async () => {
+    try {
+      const response = await axios.post(`http://localhost:5000/createmessage`);
+      const data = response.data; // Return the fetched data from the response
+      console.log("Data", data);
+      //  setMessage(data)
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      return [];
+    }
+  };
 
-    const fetchAllMessages = async () => {
-        try {
-            const response = await axios.get(`http://localhost:5000/allmessage/${id}`);
-            const data = response.data; // Return the fetched data from the response
-            console.log("Data", data);
-            setAllmessages("Data2", data)
-            // setMessage(data)
-        } catch (error) {
-            console.error("Error fetching messages:", error);
-            return [];
-        }
-    };
-
-    useEffect(() => {
-
-        fetchAllMessages()
-    }, [])
-
-
-    const createMessage = async () => {
-        try {
-            const response = await axios.post(`http://localhost:5000/createmessage`);
-            const data = response.data; // Return the fetched data from the response
-            console.log("Data", data);
-            //  setMessage(data)
-        } catch (error) {
-            console.error("Error fetching messages:", error);
-            return [];
-        }
+  const handleSendMessage = async () => {
+    if (message) {
+      ws.send(
+        JSON.stringify({
+          recipient: id,
+          text: message,
+        })
+      );
+      setAllmessages([
+        ...allmessages,
+        { senderId: props.userId, text: message },
+      ]); // Update allmessages state
+      setMessage(""); // Clear the input after sending
     }
 
-    const handleSendMessage = async () => {
-        if (message) {
-            ws.send(JSON.stringify({
-                recipient: id,
-                text: message
-            }))
-        }
+    try {
+      const response = await axios.post("http://localhost:5000/createmessage", {
+        senderId: props.userId,
+        recipientId: id,
+        text: message,
+        file: null,
+      });
 
-        try {
-            const response = await axios.post("http://localhost:5000/createmessage", {
-                senderId: props.userId,
-                recipientId: id,
-                text: message,
-                file: null
-            });
+      // Assuming the response contains the newly created message
+      const newMessage = response.data;
+      console.log("newMessage", newMessage);
+      // // Update state with the new message
+      setAllmessages([...messages, newMessage]);
 
-            // Assuming the response contains the newly created message
-            const newMessage = response.data;
-            console.log("newMessage", newMessage);
-            // // Update state with the new message
-            setAllmessages([...messages, newMessage]);
-
-            setMessage(""); // Clear the input after sending
-
-        } catch (error) {
-            console.error("Error creating message:", error);
-        }
-
-
+      setMessage(""); // Clear the input after sending
+    } catch (error) {
+      console.error("Error creating message:", error);
     }
-    console.log("Message", message)
+  };
+  console.log("Message", message);
 
-    const handleMessageChange = (event) => {
-        setMessage(event.target.value);
-    };
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+  console.log("allmessagesvvvv", allmessages);
+  const messageswithoutDupes = uniqBy(messages, "id");
 
-
-    const messageswithoutDupes = uniqBy(messages, 'id');
-
-
-
-    return (
+  return (
+    <>
+      {selectedContact && (
         <>
-            {selectedContact && (
-                <>
-                    <div className="chatarea-header">
+          <div className="chatarea-header">
+            {allmessages.map((msg, index) => (
+              <div key={index}>{msg.text}</div>
+            ))}
+          </div>
 
-                    </div>
-
-                    <div className="message-box">
-                        <input
-                            type="text"
-                            placeholder="Type your message..."
-                            value={message}
-                            onChange={handleMessageChange}
-                        />
-                        <button onClick={handleSendMessage}>
-                            <BsArrowRight />
-                        </button>
-                    </div>
-                </>
-            )}
-            {!selectedContact && <p>No selected contact</p>}
+          <div className="message-box">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={message}
+              onChange={handleMessageChange}
+            />
+            <button onClick={handleSendMessage}>
+              <BsArrowRight />
+            </button>
+          </div>
         </>
-    );
+      )}
+      {!selectedContact && <p>No selected contact</p>}
+    </>
+  );
 };
 
 export default Chatarea;

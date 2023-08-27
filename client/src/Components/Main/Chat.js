@@ -10,8 +10,6 @@
 //   const [selectedContact, setSelectedContact] = useState(null);
 //   const [messages, setMessages] = useState([]);
 
-
-
 //   useEffect(() => {
 //     var storedUserInfo = localStorage.getItem("userInfo");
 //     var parsedUserInfo = JSON.parse(storedUserInfo);
@@ -30,7 +28,6 @@
 //       }
 //     };
 
-
 //     function showOnlinePeople(peopleArray) {
 //       const people = {};
 //       peopleArray.forEach(({ userId, username }) => {
@@ -41,7 +38,6 @@
 //       setOnlinePeople(people);
 
 //     }
-
 
 //     function handMessage(e) {
 //       console.log("ssafkhsafgsjfsfgjfgf")
@@ -89,8 +85,6 @@
 
 // export default Chat;
 
-
-
 // import React, { useEffect, useState } from "react";
 // import "../../style/chat.css";
 // import ContactList from "./ContactList";
@@ -102,7 +96,6 @@
 //   const [username, setUserName] = useState('')
 //   const [selectedContact, setSelectedContact] = useState(null);
 //   const [messages, setMessages] = useState([]);
-
 
 //   useEffect(() => {
 //     var storedUserInfo = localStorage.getItem("userInfo");
@@ -122,7 +115,6 @@
 //       }
 //     };
 
-
 //     function showOnlinePeople(peopleArray) {
 //       const people = {};
 //       peopleArray.forEach(({ userId, username }) => {
@@ -133,7 +125,6 @@
 //       setOnlinePeople(people);
 
 //     }
-
 
 //     function handMessage(e) {
 
@@ -199,20 +190,13 @@
 
 // export default Chat;
 
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import "../../style/chat.css";
 import ContactList from "./ContactList";
 import Chatarea from "./Chatarea";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import axios from "axios"; // Import axios
 const Chat = () => {
-
-
   const [ws, setWs] = useState(null);
   const [onlinePeople, setOnlinePeople] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
@@ -238,7 +222,9 @@ const Chat = () => {
   }, []);
   const fetchOnlinePeople = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/account/online-people");
+      const response = await axios.get(
+        "http://localhost:5000/account/online-people"
+      );
       return response.data; // Return the fetched data from the response
     } catch (error) {
       console.error("Error fetching online people:", error);
@@ -247,13 +233,11 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    fetchOnlinePeople().then(data => {
+    fetchOnlinePeople().then((data) => {
       setOnlinePeople(data); // Update the onlinePeople state
       console.log("OnlinePeople", data); // Updated onlinePeople
     });
   }, []);
-
-
 
   const sendMessage = async (recipientId, text) => {
     const data = { senderId: userId, recipientId, text }; // Include the senderId and recipientId
@@ -276,7 +260,6 @@ const Chat = () => {
       console.error("Error sending message:", error);
     }
   };
-
 
   useEffect(() => {
     console.log("Updated Messages:", messages);
@@ -303,12 +286,12 @@ const Chat = () => {
   }, [onlinePeople]);
   const handMessage = async (e) => {
     const messageData = JSON.parse(e.data);
-    if ('online' in messageData) {
+    console.log("MessageData", messageData);
+    if ("online" in messageData) {
       const onlinePeopleData = await fetchOnlinePeople();
       setOnlinePeople(onlinePeopleData);
       console.log("OnlinePeople", onlinePeopleData); // Updated onlinePeople
-
-    } else if ('text' in messageData) {
+    } else if ("text" in messageData) {
       // const { id, sender, text } = messageData;
       // setMessages((prevMessages) => [
       //   ...prevMessages,
@@ -318,24 +301,27 @@ const Chat = () => {
       // const messages = sendMessage();
       // console.log("Updated Messages:", messages);
 
-      const { senderId, text } = messageData;
+      const { sender, text } = messageData;
+      console.log("2323", sender, text);
+      setMessages((prevMessages) => [...prevMessages, messageData]);
+      // try {
+      //   const response = await axios.post(
+      //     "http://localhost:5000/createmessage",
+      //     {
+      //       senderId: sender, // Use the senderId from the received message
+      //       recipientId: userId, // Use the recipientId of the receiver
+      //       text: text,
+      //       file: null,
+      //     }
+      //   );
 
-      try {
-        const response = await axios.post("http://localhost:5000/createmessage", {
-          senderId: senderId, // Use the senderId from the received message
-          recipientId: userId, // Use the recipientId of the receiver
-          text: text,
-          file: null
-        });
-
-        const newMessage = response.data;
-        setAllmessages([...allmessages, newMessage]);
-
-      } catch (error) {
-        console.error("Error creating message:", error);
-      }
+      //   const newMessage = response.data;
+      //   // setAllmessages([...allmessages, newMessage]);
+      // } catch (error) {
+      //   console.error("Error creating message:", error);
+      // }
     }
-  }
+  };
 
   const getData = (data) => {
     setSelectedContact(data);
@@ -363,6 +349,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-
-
